@@ -99,27 +99,3 @@ app.resizable(0,0)          #固定視窗大小
 #app.iconify()              #視窗最小化 
 
 app.mainloop()
-
-
-
-#
-url_Log="http://localhost/WaWebService/JSON/Login"
-r = requests.get(url_Log, auth=('admin',''))
-print(r.status_code)
-print(r.text)
-#
-url_ServerTime='http://localhost/WaWebService/Json/ServerTime'
-r1 = requests.get(url_ServerTime,headers = headers,auth=('admin',''))
-print(r1.status_code)
-print(r1.text)
-#
-url_TagValue='http://localhost/WaWebService/Json/GetTagValue/JAES-Water'
-r2 = requests.post(url_TagValue, headers = headers, auth=('admin',''), json={"Tags":[{"Name":"Rain_Acc_Flow" }]} )
-print(r2.status_code)
-print(r2.text)
-#
-url_alarm='http://localhost/WaWebService/Json/GetVersion/JAES-Water'
-r3 = requests.get(url_alarm,headers = headers,auth=('admin',''))
-print(r3.status_code)
-print(r3.text)
-"""
