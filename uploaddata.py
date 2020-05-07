@@ -4,16 +4,14 @@ CYCO
 日期:2020/05/05
 功能:水資源物聯網感測作業平台與Webaccess連接，將流量計上傳至水資源物聯網
 
-
 """
 
-
-import random
 import json  
-import datetime 
-import time
 import requests
 import tkinter as tk
+import time
+
+print('Start Upload Data...')
 #Webaccess Headers
 headers = {
     'Content-Type' : 'application/json; charset=utf-8; LoginType=view;',
@@ -22,13 +20,15 @@ headers = {
 
 #水利署headers
 token_url = "https://iapi.wra.gov.tw/v3/oauth2/token"
-payload_id = 'grant_type=client_credentials&client_id=MSGjrh6JrOO/5AbG1v88je/KIFkIeDOsjZWi25UcxIg%3D&client_secret=bRj2WMeCfnJTwWkVTkvJoQ%3D%3D'
+#輸入client_id=  client_secret=
+payload_id = 'grant_type=client_credentials&client_id=******&client_secret=******'
 headers_token = {
   'Content-Type': 'application/x-www-form-urlencoded',
   'Cookie': 'cookiesession1=167C34E3HHVONHNDKNDMEUMGPPV66C5D'
 }
-response = requests.request("GET", token_url, headers=headers_token, data = payload_id)
-get_token=response.text.encode('utf8')
+
+response_token = requests.request("GET", token_url, headers=headers_token, data = payload_id)
+get_token=response_token.text.encode('utf8')
 jget_token=json.loads(get_token)
 print(jget_token,type(jget_token))
 
@@ -57,6 +57,8 @@ clist=tag1
 for tag2 in clist:
     print(tag2)
 get_tag=tag2["Value"]
+if get_tag <= 0:
+    get_tag=0
 
 #抓取系統時間
 url_ServerTime='http://localhost/WaWebService/Json/ServerTime'
@@ -89,13 +91,27 @@ headers = {
 response = requests.request("POST", upload_url, headers=headers, data =upload_data)
 print(response.text.encode('utf8'))
 
-
-
+t=time.time()
+local_time = time.ctime(t)
+print(local_time)
+time_result = time.localtime(t)
+#
+print('Done')
 ### app視窗
 app=tk.Tk()
 app.title('App Upload')     #視窗名稱
 app.geometry('400x300')     #視窗大小
 app.resizable(0,0)          #固定視窗大小
-#app.iconify()              #視窗最小化 
+label_time = tk.Label(app,text = time_result)
+label_time.pack()
+label_resopnse = tk.Label(app,text = json.loads(response.text)["DetailMessage"])
+label_resopnse.pack()
 
+def destoryApp():
+  print('Destory')
+  app.destroy()
+  return 0
+
+destory_App=destoryApp()
 app.mainloop()
+
